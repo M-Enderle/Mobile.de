@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/static/images/mobile_icon.png">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>AI search</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</head>
+<body>
+    <div class="center">
+        <form action="/search">
+            <h1>Fahrzeug Preisvorschlag</h1>
+            <div class="section">
+                <h2>Basisdaten</h2>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="manufacturer">Hersteller</label><br>
+                    <select id="manufacturer" name="manufacturers" required>
+                        <option value="">Wähle eine Marke</option>
+                        {% for manufacturer in manufacturers %}
+                            <option value="{{ manufacturer }}">{{ manufacturer }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="model">Modell</label><br>
+                    <input type="text" name="model" id="model" placeholder="z.B. model x">
+                </div>
+            </div>
+            <div class="row">
+                <div class="car-type">
+                    {% for type in car_types %}
+                        <div class="car">
+                            <input class="checkbox" type="checkbox" title="select {{ type }}" name="{{ type }}" id="{{ type }}" oninvalid="this.setCustomValidity('Please select at least one')" oninput="this.setCustomValidity('')" required>
+                            <img src="/static/images/cars/{{ type }}.svg" alt="" srcset="">
+                            <div class="car-name">
+                                {{ type }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="num_seats">Sitzplätze</label><br>
+                    <select id="num_seats" name="num_seats">
+                        <option value=""></option>
+                        {% for option in num_seats %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="doors">Anzahl der Türen</label><br>
+                    <select id="doors" name="doors">
+                        <option value=""></option>
+                        {% for option in doors %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Zustand</h2>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="num_of_owners">Vorbesitzer</label><br>
+                    <select id="num_of_owners" name="num_of_owners">
+                        <option value=""></option>
+                        {% for option in num_of_owners %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="condition">Fahrzeugzustand</label><br>
+                    <select id="condition" name="condition">
+                        <option value=""></option>
+                        {% for condition in conditions %}
+                            <option value="{{ condition }}">{{ condition }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="first_registration">Erstzulassung</label><br>
+                    <select id="first_registration" name="first_registration">
+                        <option value=""></option>
+                        {% for option in first_registration %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="hu">HU fällig</label><br>
+                    <select id="hu" name="hu">
+                        <option value="unknown">Unbekannt</option>
+                        {% for option in hu %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="mileage">Kilometerstand</label><br>
+                    <input type="number" name="mileage" id="mileage" min="0" max="1000000">
+                </div>
+            </div>
+            <div class="section">
+                <h2>Technische Details</h2>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="power">Leistung in PS</label><br>
+                    <input type="number" name="power" id="power" min="0" max="1100">
+                </div>
+                <div class="item">
+                    <label for="cubicCapacity">Hubraum (cm³)</label><br>
+                    <input type="number" name="cubicCapacity" id="cubicCapacity" min="0" max="9000">
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="fuel">Treibstoff</label><br>
+                    <select id="fuel" name="fuel">
+                        <option value=""></option>
+                        {% for option in fuel %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="gear">Getriebe</label><br>
+                    <select id="gear" name="gear">
+                        <option value=""></option>
+                        {% for option in gear %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="consumption">Verbrauch (l/100km)</label><br>
+                    <input type="number" name="consumption" id="consumption" min="0" max="20">
+                </div>
+                <div class="item">
+                    <label for="co2">CO₂ Emissionen (g/km)</label><br>
+                    <input type="number" name="co2" id="co2" min="0" max="20">
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="emission_class">Schadstoffklasse</label><br>
+                    <select id="emission_class" name="emission_class">
+                        <option value=""></option>
+                        {% for option in emission_class %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="environment_class">Umweltplakette</label><br>
+                    <select id="environment_class" name="environment_class">
+                        <option value=""></option>
+                        {% for option in environment_class %}
+                            <option value="{{ option | int }}">{{ option | int }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Innenraum</h2>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="airbag">Airbag</label><br>
+                    <select id="airbag" name="airbag">
+                        <option value=""></option>
+                        {% for option in airbag %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="item">
+                    <label for="climate_control">Klimaanlage</label><br>
+                    <select id="climate_control" name="climate_control">
+                        <option value=""></option>
+                        {% for option in climate_control %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="item">
+                    <label for="interior">Innenausstattung</label><br>
+                    <select id="interior" name="interior">
+                        <option value=""></option>
+                        {% for option in interior %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Farbe</h2>
+            </div>
+            <div class="row">
+                <div class="colors">
+                    <input type="hidden" name="color" id="color-input">
+                    <div class="color" onclick="select_color('andere')" id="andere">
+                        <div class="color-preview" style="background: linear-gradient(217deg, rgba(255,0,0,1), rgba(255,0,0,0) 70.71%),linear-gradient(127deg, rgba(0,255,0,1), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,1), rgba(0,0,255,0) 70.71%);">
+                            <img src="/static/images/checkmarkcircle2outline_110715.png" alt="" srcset="">
+                        </div>
+                        <div class="color-name">andere</div>
+                    </div>
+                    {% for color in colors %}
+                        <div class="color" onclick="select_color('{{ color.ger }}')" id="{{ color.ger }}">
+                            <div class="color-preview" style="background-color: {{ color.eng }};">
+                                <img src="/static/images/checkmarkcircle2outline_110715.png" alt="" srcset="">
+                            </div>
+                            <div class="color-name">{{ color.ger }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="section">
+                <h2>Preisvorhersage</h2>
+            </div>
+            <div class="row">
+                <div class="price-outer">
+                    <div class="predicted-price">
+                        0000,00€
+                    </div>
+                    <div class="price-span">
+                        <div class="price-bounds lower"></div>
+                        <span class="line horizontal"></span>
+                        <span class="line vertical"></span>
+                        <div class="price-bounds higher"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cars">
+                <div class="cars-inner">
+                    <div class="section">
+                        <h2>Ähnliche Autos</h2>
+                    </div>
+                    <div class="similar-cars">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
