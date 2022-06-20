@@ -9,7 +9,7 @@ function select_color(color) {
 
 
 $(function(){
-    var requiredCheckboxes = $('.car-type :checkbox[required]');
+    let requiredCheckboxes = $('.car-type :checkbox[required]');
     requiredCheckboxes.change(function(){
         if(requiredCheckboxes.is(':checked')) {
             requiredCheckboxes.removeAttr('required');

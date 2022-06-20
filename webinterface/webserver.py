@@ -6,7 +6,7 @@ import pandas as pd
 from tensorflow import keras
 from get_closest import get_closest
 
-cars = pd.read_csv('cars_clean.csv', low_memory=False)
+cars = pd.read_csv('../resources/cars_clean.csv', low_memory=False)
 app = Flask(__name__, template_folder='templates')
 
 colors_translated = {'andere': 'other', 'beige': 'beige', 'blau': 'blue', 'braun': '#a5462a', 'gelb': 'yellow',
