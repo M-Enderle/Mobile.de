@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.metrics.pairwise import pairwise_distances
 import requests
 
-cars = pd.read_csv('cars_clean.csv')
+cars = pd.read_csv('../resources/cars_clean.csv')
 
 min_max = dict()
 
@@ -40,8 +40,7 @@ def get_closest(car) -> [list, None]:
         return None
 
     cars_filtered = cars[cars['title'].str.contains(car['model'].lower())]
-    for col in ["manufacturer", "fuel", "climate_control", "gear", "airbag", "environment_class", "emission_class",
-                "doors", "num_seats"]:
+    for col in ["manufacturer", "fuel", "climate_control", "gear", "airbag", "emission_class"]:
         if col in car and car[col]:
             cars_filtered = cars_filtered[cars_filtered[col] == car[col]]
 

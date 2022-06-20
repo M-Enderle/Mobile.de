@@ -45,26 +45,6 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="row">
-                <div class="item">
-                    <label for="num_seats">Sitzplätze</label><br>
-                    <select id="num_seats" name="num_seats">
-                        <option value=""></option>
-                        {% for option in num_seats %}
-                            <option value="{{ option | int }}">{{ option | int }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="item">
-                    <label for="doors">Anzahl der Türen</label><br>
-                    <select id="doors" name="doors">
-                        <option value=""></option>
-                        {% for option in doors %}
-                            <option value="{{ option | int }}">{{ option | int }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
             <div class="section">
                 <h2>Zustand</h2>
             </div>
@@ -94,15 +74,6 @@
                     <select id="first_registration" name="first_registration">
                         <option value=""></option>
                         {% for option in first_registration %}
-                            <option value="{{ option | int }}">{{ option | int }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="item">
-                    <label for="hu">HU fällig</label><br>
-                    <select id="hu" name="hu">
-                        <option value="unknown">Unbekannt</option>
-                        {% for option in hu %}
                             <option value="{{ option | int }}">{{ option | int }}</option>
                         {% endfor %}
                     </select>
@@ -161,15 +132,6 @@
                     <select id="emission_class" name="emission_class">
                         <option value=""></option>
                         {% for option in emission_class %}
-                            <option value="{{ option | int }}">{{ option | int }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="item">
-                    <label for="environment_class">Umweltplakette</label><br>
-                    <select id="environment_class" name="environment_class">
-                        <option value=""></option>
-                        {% for option in environment_class %}
                             <option value="{{ option | int }}">{{ option | int }}</option>
                         {% endfor %}
                     </select>

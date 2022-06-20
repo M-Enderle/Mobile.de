@@ -38,6 +38,9 @@ $(function(){
         $("select").not("#manufacturer").val("");
         $('.color-preview').removeClass('selected');
         $('input:checkbox').prop('checked', false);
+        $(".predicted-price").text("0000,00€");
+        $(".price-bounds.lower").text("");
+        $(".price-bounds.higher").text("");
     });
 
     in_.change(check_filled);
@@ -65,15 +68,25 @@ function check_filled(){
 
 function autofill(title){
     let car_info = currently_predicted[title];
-    const attributes = {"first_registration":"Erstzulassung", "power":"Leistung", "cubicCapacity":"Hubraum", "consumption":"Verbauch", "co2":"CO₂",
-                        "fuel":"Treibstoff", "climate_control":"Klimaanlage", "gear":"Getriebe", "airbag":"Airbag", "environment_class":"Umweltplakette",
-                        "emission_class":"Schadstoffklasse", "doors":"Türen", "num_seats":"Sitze"};
+    const attributes = {"power":"Leistung", "cubicCapacity":"Hubraum", "consumption":"Verbauch", "co2":"CO₂",
+                        "fuel":"Treibstoff", "climate_control":"Klimaanlage", "gear":"Getriebe", "airbag":"Airbag",
+                        "emission_class":"Schadstoffklasse", "interior":"Innenraum"};
 
     for (const [key, value] of Object.entries(attributes)) {
         let el = $("#"+key);
         if (el.val() === "" || el.hasClass("auto-filled")) {
             el.val(car_info[key]);
             el.addClass("auto-filled");
+        }
+    }
+
+    let types = ["cabrio", "limousine", "suv", "van", "sportwagen", "kleinwagen", "kombi"];
+    for (const type of types) {
+        let el = $("#"+type);
+        if (car_info[type] === 1) {
+            el.prop('checked', true);
+        } else {
+            el.prop('checked', false);
         }
     }
 }
@@ -90,8 +103,6 @@ function closest(){
     let data = {
             "manufacturer": manufacturer,
             "model": model,
-            "num_seats": "",
-            "doors": "",
             "first_registration": "",
             "power": "",
             "cubicCapacity": "",
@@ -102,10 +113,9 @@ function closest(){
             "emission_class": "",
             "airbag": "",
             "climate_control": "",
-            "environment_class": ""
         }
 
-    let to_int = ["environment_class", "emission_class", "doors", "num_seats"];
+    let to_int = ["emission_class"];
     for (const [key, value] of Object.entries(data)) {
         let el = $("#"+key);
         if (el.val() !== "" && !el.hasClass("auto-filled")) {
@@ -152,8 +162,7 @@ function closest(){
                     let lastSimilarCar = $(".similar-car").last();
 
                     const attributes = {"first_registration":"Erstzulassung", "power":"Leistung", "cubicCapacity":"Hubraum", "consumption":"Verbauch", "co2":"CO₂",
-                        "fuel":"Treibstoff", "climate_control":"Klimaanlage", "gear":"Getriebe", "airbag":"Airbag", "environment_class":"Umweltplakette",
-                        "emission_class":"Schadstoffklasse", "doors":"Türen", "num_seats":"Sitze"};
+                        "fuel":"Treibstoff", "climate_control":"Klimaanlage", "gear":"Getriebe", "airbag":"Airbag", "emission_class":"Schadstoffklasse"};
 
                     car.consumption = car.consumption.toFixed(2);
 
@@ -186,12 +195,9 @@ function predict(){
     const manufacturer = $("#manufacturer").val().toLowerCase();
     const model = $("#model").val().toLowerCase();
     let car_types = [];
-    const num_seats = $("#num_seats").val().toLowerCase();
-    const doors = $("#doors").val().toLowerCase();
     const num_of_owners = $("#num_of_owners").val().toLowerCase();
     const condition = $("#condition").val().toLowerCase();
     const first_registration = $("#first_registration").val().toLowerCase();
-    const hu = $("#hu").val().toLowerCase();
     const mileage = $("#mileage").val().toLowerCase();
     const power = $("#power").val().toLowerCase();
     const cubicCapacity = $("#cubicCapacity").val().toLowerCase();
@@ -204,7 +210,6 @@ function predict(){
     const climate_control = $("#climate_control").val().toLowerCase();
     const interior = $("#interior").val().toLowerCase();
     const color = $("#color-input").val().toLowerCase();
-    const environment_class = $("#environment_class").val().toLowerCase();
 
     $('.car-type :checkbox').each(function(){
         if($(this).is(':checked')){
@@ -221,12 +226,9 @@ function predict(){
             "manufacturer": manufacturer,
             "model": model,
             "car_types": car_types,
-            "num_seats": num_seats,
-            "doors": doors,
             "num_of_owners": num_of_owners,
             "condition": condition,
             "first_registration": first_registration,
-            "hu": hu,
             "mileage": mileage,
             "power": power,
             "cubicCapacity": cubicCapacity,
@@ -239,13 +241,16 @@ function predict(){
             "climate_control": climate_control,
             "interior": interior,
             "color": color,
-            "environment_class": environment_class
         })
     }).then(response => response.json()).then((responseJson) => {
         if(responseJson.status === "ok") {
             $(".predicted-price").text(parseFloat(responseJson.price).toFixed(2) + "€");
-            $(".price-bounds.lower").text((parseFloat(responseJson.price) - parseFloat(responseJson.price) * (0.07924108/2)).toFixed(2) + "€")
-            $(".price-bounds.higher").text((parseFloat(responseJson.price) + parseFloat(responseJson.price) * (0.07924108/2)).toFixed(2) + "€")
+            $(".price-bounds.lower").text((parseFloat(responseJson.price) - parseFloat(responseJson.price) * (0.07924108 / 2)).toFixed(2) + "€")
+            $(".price-bounds.higher").text((parseFloat(responseJson.price) + parseFloat(responseJson.price) * (0.07924108 / 2)).toFixed(2) + "€")
+        } else {
+            $(".predicted-price").text("0000,00€");
+            $(".price-bounds.lower").text("")
+            $(".price-bounds.higher").text("")
         }
     });
 }
