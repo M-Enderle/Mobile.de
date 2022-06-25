@@ -1,11 +1,6 @@
 # Mobile.de
 Neural network trained on data from mobile.de for a university project
-
-## descriptive analysis
-![Correlation matrix](images/correlation.png | width=100)
-more coming soon...
-
-## Docker
+## Run with Docker
 You can use docker to build and run the webserver part of the project.
 To build the image, run the following command from the project root folder:
 ```shell
