@@ -1,3 +1,2 @@
 resources/cars_clean.csv filter=lfs diff=lfs merge=lfs -text
 resources/cars.csv filter=lfs diff=lfs merge=lfs -text
-resources/model.keras filter=lfs diff=lfs merge=lfs -text

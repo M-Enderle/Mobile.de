@@ -2,7 +2,7 @@
 Neural network trained on data from mobile.de for a university project
 
 ## descriptive analysis
-![Correlation matrix](images/correlation.png)
+![Correlation matrix](images/correlation.png | width=100)
 more coming soon...
 
 ## Docker
@@ -15,3 +15,4 @@ To run the container, run the following command:
 ```shell
 docker run -p 5000:5000 mobile.ai
 ```
+Then visit [the local webserver](http://localhost:5000)
